@@ -120,6 +120,8 @@ class Bower {
           Object.assign(info.dependencies ? info.dependencies : {},
           Object.keys(processed).length == 0 && info.devDependencies ? info.devDependencies : {});
 
+      Ana.log(ownerPackageVersionString, info.devDependencies);
+
       // Filter out what we've already processed.
       Object.keys(depsToProcess).forEach(key => {
         if (processed[key]) {
@@ -151,8 +153,10 @@ class Bower {
         if (!packageToProcess.includes("#") && !packageToProcess.includes("/")) {
           mayNotExist = true;
           promises.push(Bower.dependencies(key + "#" + packageToProcess, processed, offline, mayNotExist));
+          Ana.log("bower/dependencies [%s]", key + "#" + packageToProcess);
         }
         promises.push(Bower.dependencies(packageToProcess, processed, offline, mayNotExist));
+        Ana.log("bower/dependencies [%s]", packageToProcess);
       });
 
       return Promise.all(promises).then(dependencyList => [].concat.apply(result, dependencyList));
@@ -163,7 +167,7 @@ class Bower {
     return new Promise(resolve => {
       var metadata = null;
       bower.commands.info(
-        ownerPackageVersionString.toLowerCase(),
+        ownerPackageVersionString.indexOf("git://") == 0 ? ownerPackageVersionString : ownerPackageVersionString.toLowerCase(),
         undefined /* property */,
         {
           offline: offline

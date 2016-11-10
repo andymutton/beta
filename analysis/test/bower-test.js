@@ -5,7 +5,7 @@ var Bower = require('../src/bower');
 
 describe("Bower", function() {
   beforeEach(function(done) {
-    new Bower().prune().then(function() {done()});
+    new Bower().prune().then(done);
   });
 
   it("fails with retry false for malformed bower.json", function() {
